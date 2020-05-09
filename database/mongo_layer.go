@@ -43,6 +43,10 @@ func (m mongoLayer) Find(filterParam schema.FilterParam) ([]interface{}, error) 
 		return nil, err
 	}
 
+	if filterParam.Sort == "" {
+		filterParam.Sort = "-_id"
+	}
+
 	var result []interface{}
 	if err := c.Find(filterParam.Condition).Skip(filterParam.Skip).Limit(filterParam.Limit).Sort(filterParam.Sort).All(&result); err != nil {
 		return nil, err
