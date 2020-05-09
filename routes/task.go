@@ -10,11 +10,8 @@ func RouteTask(r *gin.RouterGroup) {
 	{
 		taskHandler := handlers.TaskHandler{}
 		groupTask.GET("/", taskHandler.ListTasks)
+		groupTask.POST("/add", taskHandler.AddTask)
+		groupTask.POST("/edit/:id", taskHandler.EditTask)
+		groupTask.POST("/remove/:id", taskHandler.RemoveTask)
 	}
-
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
 }
