@@ -15,9 +15,16 @@ type TaskHandler struct {
 
 func (m TaskHandler) ListTasks(c *gin.Context) {
 	taskService := services.NewTaskService()
-	data, err := taskService.List()
+	var taskData schema.TaskListFilter
+	var typeStr = c.Query("type")
+
+	if taskType, err := strconv.Atoi(typeStr); err == nil {
+		taskData.Type = taskType
+	}
+
+	data, err := taskService.List(taskData)
 	if err != nil {
-		c.JSON(200, common.Format(0,err, nil))
+		c.JSON(200, common.Format(0,err, gin.H{}))
 		return
 	}
 	c.JSON(200, common.Format(1,nil, data))
