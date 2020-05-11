@@ -7,7 +7,8 @@ import (
 )
 
 type TaskService interface {
-	List(taskData schema.TaskListFilter) ([]schema.Task, error)
+	ListTasks(taskData schema.TaskListFilter) ([]schema.Task, error)
+	GetTaskById(id int) (schema.Task, error)
 	AddTask(task schema.Task) error
 	EditTask(id int, taskData schema.Task) error
 	RemoveTask(id int) error
@@ -23,7 +24,7 @@ func NewTaskService() TaskService{
 	}
 }
 
-func (m taskService) List(taskData schema.TaskListFilter) ([]schema.Task, error) {
+func (m taskService) ListTasks(taskData schema.TaskListFilter) ([]schema.Task, error) {
 	var filter schema.FilterParam
 	filter.Condition = bson.M{}
 	if taskData.Type > 0 {
@@ -31,6 +32,22 @@ func (m taskService) List(taskData schema.TaskListFilter) ([]schema.Task, error)
 	}
 
 	return m.taskRepo.List(filter)
+}
+
+func (m taskService) GetTaskById(id int) (schema.Task, error) {
+	var result schema.Task
+	var filter = schema.FilterParam{
+		Condition: bson.M{"id": id},
+	}
+
+	tasks, err := m.taskRepo.List(filter)
+	if err != nil {
+		return result, err
+	}
+
+	result = tasks[0]
+
+	return result, nil
 }
 
 func (m taskService) AddTask(task schema.Task) error {

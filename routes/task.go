@@ -12,6 +12,7 @@ func RouteTask(r *gin.RouterGroup) {
 	{
 		taskHandler := handlers.TaskHandler{}
 		groupTask.GET("/", taskHandler.ListTasks)
+		groupTask.GET("/:id", taskHandler.GetTaskById)
 		groupTask.POST("/add", taskHandler.AddTask)
 		groupTask.POST("/edit/:id", taskHandler.EditTask)
 		groupTask.POST("/remove/:id", taskHandler.RemoveTask)

@@ -22,12 +22,35 @@ func (m TaskHandler) ListTasks(c *gin.Context) {
 		taskData.Type = taskType
 	}
 
-	data, err := taskService.List(taskData)
+	data, err := taskService.ListTasks(taskData)
 	if err != nil {
 		c.JSON(200, common.Format(0,err, gin.H{}))
 		return
 	}
 	c.JSON(200, common.Format(1,nil, data))
+}
+
+func (m TaskHandler) GetTaskById(c *gin.Context) {
+	var taskId int
+	var err error
+	taskService := services.NewTaskService()
+	idStr := c.Param("id")
+	taskId, err = strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(200, common.Format(0, err, nil))
+		return
+	}
+
+	task, err := taskService.GetTaskById(taskId)
+	if err != nil {
+		c.JSON(200, common.Format(0, err, nil))
+		return
+	}
+
+	c.JSON(200, common.Format(1, nil, task))
+	return
+
+
 }
 
 func (m TaskHandler) AddTask(c *gin.Context) {
